@@ -1,0 +1,104 @@
+# Data preprocessing
+import pandas as pd
+import numpy as np
+df = pd.read_csv("/content/Fashion_Outfit_Matching_10000 (1).csv")
+print(" Dataset Information:")
+df.info()
+print("\nFirst 5 rows of the dataset:")
+display(df.head())
+print("\nMissing Values:")
+missing = df.isnull().sum()
+print(missing[missing > 0] if missing.sum() > 0 else "No missing values found.")
+print("\nSummary Statistics:")
+display(df.describe(include=[np.number]))
+print("\nCategorical Feature Summary:")
+display(df.describe(include=[object]))
+
+
+#2-Data Cleaning
+
+import pandas as pd
+file_path = "/content/Fashion_Outfit_Matching_10000 (1).csv"
+df = pd.read_csv(file_path)
+print("Initial dataset shape:", df.shape)
+print(df.head())
+df_cleaned = df.drop_duplicates()
+print("After removing duplicates:", df_cleaned.shape)
+print("Missing Values:")
+print(df_cleaned.isnull().sum())
+df_cleaned = df_cleaned.dropna()
+print("After dropping missing values:", df_cleaned.shape)
+for col in df_cleaned.select_dtypes(include='object').columns:
+    df_cleaned[col] = df_cleaned[col].str.strip()
+
+print("Cleaned dataset info:")
+df_cleaned.info()
+
+
+
+#"This code builds a machine learning model to guess the occasion for which a fashion outfit is suitable
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+df = pd.read_csv("/content/Fashion_Outfit_Matching_10000 (1).csv")
+print("Dataset shape:", df.shape)
+print("\nColumn names:", df.columns)
+print("\nMissing values:\n", df.isnull().sum())
+print("\nValue counts for 'Occasion':\n", df['Occasion'].value_counts())
+
+# Plot - Occasions
+sns.countplot(x='Occasion', data=df)
+plt.title("Count of Each Occasion")
+plt.xticks(rotation=45)
+plt.show()
+df = df.dropna()
+df_encoded = pd.get_dummies(df.drop(columns=['ID']), drop_first=True)
+X = df_encoded.drop(columns=['Occasion_Work', 'Occasion_Party', 'Occasion_Casual'], errors='ignore')
+y = df['Occasion']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Model Accuracy:", accuracy)
+
+# Confusion Matrix Heatmap
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot(cmap='viridis')
+
+#Dimensional reduction ,
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+
+plt.figure(figsize=(8, 5))
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='plasma', s=20)
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.title("PCA: Outfit Dataset")
+plt.colorbar(label="Occasion")
+plt.show()
+
+#Linear Regression
+from sklearn.linear_model import LinearRegression
+
+lin_reg = LinearRegression()
+lin_reg.fit(X_train, y_train)
+y_pred_lin = lin_reg.predict(X_test)
+
+plt.figure(figsize=(6, 4))
+plt.scatter(y_test, y_pred_lin, alpha=0.5)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+plt.xlabel("Actual Occasion")
+plt.ylabel("Predicted Occasion")
+plt.title("Linear Regression: Actual vs Predicted")
+plt.show()
