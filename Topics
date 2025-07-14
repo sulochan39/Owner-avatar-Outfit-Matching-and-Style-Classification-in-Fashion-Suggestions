@@ -1,0 +1,19 @@
+Topics to be covered in the INT 375 project.
+1. Data preprocessing
+2. Data Cleaning
+3. Training & testing
+4. EDA
+5. Models(ML)
+6. Confusion matrix
+7. Dimensionality Reduction using PCA
+8. Regularization
+9. y=mx+b -> slope and intercept
+10. XGboost
+11. RMSE, MSE, R^2
+12. Gradient Descent
+13. Cross Validation
+14. Correlation & Covariance
+15. EDA using Visulalization
+-> univariate
+-> Multivariate
+-> Bivariate
